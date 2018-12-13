@@ -1,4 +1,8 @@
 // Databricks notebook source
+//check in the notebook to GIT
+
+// COMMAND ----------
+
 //DEFINE THE INPUT FILES
 val businessFile = "dbfs:/mnt/dataingestiondemo/data/input/businesses_plus.csv"
 val inspectionFile = "dbfs:/mnt/dataingestiondemo/data/input/inspections_plus.csv"
@@ -15,6 +19,8 @@ businessDF.createOrReplaceTempView("business")
 inspectionDF.createOrReplaceTempView("inspection")
 violationDF.createOrReplaceTempView("violation")
 
+//Look at the schema from output
+
 // COMMAND ----------
 
 // MAGIC %sql
@@ -25,7 +31,7 @@ violationDF.createOrReplaceTempView("violation")
 
 // COMMAND ----------
 
-//Lets clean up the cities a bit
+//Lets clean up the cities a bit - write some spark code if needed to achieve custom processing
 
 //Create a User defined function
 def cleanUpCity=(s: String) => {
@@ -96,10 +102,13 @@ FROM business
 cleanedBusinessDF.createOrReplaceTempView("business")
 display(cleanedBusinessDF)
 
+//cities are cleaned up
+//download preview results or full results
+
 // COMMAND ----------
 
 // MAGIC %sql
-// MAGIC -- DO ADVANCED EXPLORATION IN SQL
+// MAGIC -- DO ADVANCED EXPLORATION IN SQL (withvisualization)
 // MAGIC -- QUESTION: FIND AVERAGE SCORE OF EACH BUSINESS
 // MAGIC 
 // MAGIC SELECT a.name AS Business, AVG(b.Score) AS AVG_SCORE FROM business a, inspection b 
@@ -122,7 +131,7 @@ display(cleanedBusinessDF)
 
 // COMMAND ----------
 
-//Cubing queries
+//Write some Cubing queries
 val businessScoresByYear = spark.sql("""
 SELECT a.name, substring(b.inspections_date, 1,4) AS inspections_year, b.Score from 
 business a, inspection b
